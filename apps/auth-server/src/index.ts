@@ -24,7 +24,9 @@ app.get('/health', (_req, res) => res.json({ ok: true }));
 app.use('/auth', authRouter);
 app.use('/api/auth', authRouter);
 
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () =>
-  console.log(`auth-server listening on http://localhost:${PORT}`),
-);
+const port = process.env.PORT ? Number(process.env.PORT) : 4000;
+const host = '0.0.0.0';
+
+app.listen(port, host, () => {
+  console.log(`auth-server listening on http://${host}:${port}`);
+});
