@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 const accessTTL = Number(process.env.JWT_ACCESS_TTL_SECONDS || 900);
