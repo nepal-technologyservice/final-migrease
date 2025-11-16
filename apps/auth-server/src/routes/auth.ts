@@ -1,10 +1,31 @@
 import { Router } from 'express';
-import { PrismaClient } from '@prisma/client';
 import crypto from 'node:crypto';
 import { hashPassword, verifyPassword, signAccess, signRefresh } from '../auth';
+import jwt from 'jsonwebtoken';
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
+
+// helper used by this file to validate refresh tokens
+async function verifyRefresh(token: string) {
+  if (!token) return null;
+  try {
+    const secret = process.env.JWT_SECRET as string;
+    if (!secret) return null;
+
+    const payload = jwt.verify(token, secret) as any;
+    const dbToken = await prisma.refreshToken.findUnique({ where: { token } });
+
+    if (!dbToken) return null;
+    if (dbToken.revokedAt) return null;
+    if (new Date(dbToken.expiresAt) < new Date()) return null;
+
+    return payload;
+  } catch {
+    return null;
+  }
+}
 
 export const authRouter = Router();
-const prisma = new PrismaClient();
 
 const OTP_CODE = '123456';
 
