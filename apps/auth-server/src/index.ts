@@ -24,6 +24,7 @@ app.get('/health', (_req, res) => res.json({ ok: true }));
 app.use('/auth', authRouter);
 app.use('/api/auth', authRouter);
 
+// remove any top-level fetch/await demo code here — it triggers TLA errors
 const port = process.env.PORT ? Number(process.env.PORT) : 4000;
 const host = '0.0.0.0';
 
